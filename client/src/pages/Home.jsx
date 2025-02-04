@@ -1,8 +1,9 @@
+import { Navbar } from "flowbite-react";
 
 const Home = () => {
   return (
     <div>
-      home
+      Home
     </div>
   )
 }
