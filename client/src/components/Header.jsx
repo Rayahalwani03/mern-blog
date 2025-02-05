@@ -37,7 +37,7 @@ const Header = () => {
           <FaMoon />
         </Button>
         <Link to="/sing-in">
-          <Button gradientDuoTone="purpleToBlue">Sign In</Button>
+          <Button gradientDuoTone="purpleToBlue" outline>Sign In</Button>
         </Link>
         <NavbarToggle />
       </div>
