@@ -9,7 +9,7 @@ mongoose.connect(process.env.MONGO)
     console.log('Connected to MongoDB');
 }) 
 .catch((error) => {
-    console.log(error);  
+    console.log(error);    
 })
 
 const app = Express();
