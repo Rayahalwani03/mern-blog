@@ -80,9 +80,9 @@ const FooterCom = () => {
 
 <div className="flex justify-center gap-4 sm:mt-0 mt-4 ">
 
-    <Footer.Icon href="#" icon={BsInstagram} />
-    <Footer.Icon href="https://github.com/Rayahalwani03" icon={BsGithub} />
-    <Footer.Icon href="https://www.linkedin.com/in/raya-halwani-46806a192/" icon={BsLinkedin} />
+    <Footer.Icon href="#" icon={BsInstagram} target="_blank" />
+    <Footer.Icon href="https://github.com/Rayahalwani03" icon={BsGithub}  target="_blank" />
+    <Footer.Icon href="https://www.linkedin.com/in/raya-halwani-46806a192/" icon={BsLinkedin} target="_blank"  />
 
 </div>
 
