@@ -2,12 +2,16 @@ import { Alert, Button, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react";
+import { signInStart,signInSuccess,signInFailure } from "../redux/user/useSlice";
+import { useDispatch,useSelector } from "react-redux";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  //const [errorMessage, setErrorMessage] = useState(null);
+  //const [loading, setLoading] = useState(false);
+  const {loading, error:errorMessage} = useSelector(state => state.user); // in the reducer we named it error but here we named it errorMessage
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -15,12 +19,14 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      setErrorMessage("Please fill in all fields");
+      //setErrorMessage("Please fill in all fields");
+      dispatch(signInFailure("Please fill in all fields"));
       return;
     }
     try {
-      setLoading(true);
-      setErrorMessage(null);
+     // setLoading(true);
+     // setErrorMessage(null);
+     dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -29,14 +35,19 @@ const SignIn = () => {
       const data = await res.json();
 
       if (data.success === false) {
-        return setErrorMessage(data.message);
+        //return setErrorMessage(data.message);
+        dispatch(signInFailure(data.message));
       }
-      setLoading(false);
-      if(res.ok){navigate("/")}
+      //setLoading(false); we dont need it cuz  dispatch(signInFailure(data.message)); is gonna set it to false 
+      if(res.ok){
+        ///++
+        dispatch(signInSuccess(data));
+        navigate("/")}
     } catch (error) {
-      setErrorMessage(error.message);
+      //setErrorMessage(error.message);
+      dispatch(signInFailure(error.message));
     }
-    setLoading(false);
+    //setLoading(false);
   };
 
   return (
@@ -49,7 +60,7 @@ const SignIn = () => {
         <div className="flex-1">
           <Link to="/" className="  font-bold dark:text-white  text-4xl">
             <span className="px-3 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-md text-white">
-              Ray's
+              Ray&apos;s
             </span>
             Blog
           </Link>
@@ -86,14 +97,14 @@ const SignIn = () => {
             </Button>
           </form>
           <div className=" flex gap-2 text-sm mt-5">
-            <span>Don't have an account ? </span>{" "}
+            <span>Don&apos;t have an account ? </span>{" "}
             <Link to="/sign-up" className="text-blue-500">
               Sign up
             </Link>
           </div>
           {errorMessage && (
             <Alert className="mt-5" color="failure">
-              {errorMessage}
+              {errorMessage} {/*  we dont have error message anymore so we will make useSelector the selector to take from the reducer stuff*/ }
             </Alert>
           )}
         </div>

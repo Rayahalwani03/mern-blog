@@ -1,6 +1,6 @@
 import { Footer } from "flowbite-react";
+import { BsGithub, BsInstagram, BsLinkedin } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import {BsFacebook, BsInstagram, BsGithub, BsLinkedin} from "react-icons/bs";
 
 const FooterCom = () => {
   return (
@@ -74,25 +74,29 @@ const FooterCom = () => {
             </Footer.LinkGroup>
           </div>
         </div>
-        <Footer.Divider/>
+        <Footer.Divider />
         <div className="w-full  sm:items-center sm:justify-between ">
-            <Footer.Copyright href="#" by="Ray's Blog" year={new Date().getFullYear()} />
+          <Footer.Copyright
+            href="#"
+            by="Ray's Blog"
+            year={new Date().getFullYear()}
+          />
 
-<div className="flex justify-center gap-4 sm:mt-0 mt-4 ">
-
-    <Footer.Icon href="#" icon={BsInstagram} target="_blank" />
-    <Footer.Icon href="https://github.com/Rayahalwani03" icon={BsGithub}  target="_blank" />
-    <Footer.Icon href="https://www.linkedin.com/in/raya-halwani-46806a192/" icon={BsLinkedin} target="_blank"  />
-
-</div>
-
-
+          <div className="flex justify-center gap-4 sm:mt-0 mt-4 ">
+            <Footer.Icon href="#" icon={BsInstagram} target="_blank" />
+            <Footer.Icon
+              href="https://github.com/Rayahalwani03"
+              icon={BsGithub}
+              target="_blank"
+            />
+            <Footer.Icon
+              href="https://www.linkedin.com/in/raya-halwani-46806a192/"
+              icon={BsLinkedin}
+              target="_blank"
+            />
+          </div>
         </div>
-
-
       </div>
-
-
     </Footer>
   );
 };
