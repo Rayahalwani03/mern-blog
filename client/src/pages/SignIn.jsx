@@ -41,7 +41,7 @@ const SignIn = () => {
         dispatch(signInFailure(data.message));
       }
       //setLoading(false); we dont need it cuz  dispatch(signInFailure(data.message)); is gonna set it to false 
-      if(res.ok){
+      if(res.ok){ 
         ///++
         dispatch(signInSuccess(data));
         navigate("/")}

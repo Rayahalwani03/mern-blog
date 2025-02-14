@@ -20,7 +20,7 @@ const userSlice = createSlice({
             state.error = null;
         },
         signInFailure: (state, action)=>{ // no valid user 
-            state.loading = false; 
+            state.loading = false;
             state.error = action.payload;
         }
 
