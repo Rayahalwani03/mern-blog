@@ -3,7 +3,7 @@
 const DashBoard = () => {
   return (
     <div>
-      db
+      dash ordas
     </div>
   )
 }

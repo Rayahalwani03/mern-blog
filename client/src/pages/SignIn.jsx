@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react";
 import { signInStart,signInSuccess,signInFailure } from "../redux/user/useSlice";
 import { useDispatch,useSelector } from "react-redux";
+import OAuth from "../components/OAuth";
+import FAuth from "../components/FAuth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
@@ -95,6 +97,8 @@ const SignIn = () => {
             <Button gradientDuoTone="purpleToPink" type="submit" disabled={loading}>
               {loading ? ( <><Spinner size="sm"/> <span className="pl-3">Loading...</span></>) : "Sign in"}
             </Button>
+            <OAuth/>
+            <FAuth/>
           </form>
           <div className=" flex gap-2 text-sm mt-5">
             <span>Don&apos;t have an account ? </span>{" "}
