@@ -15,16 +15,17 @@ const DashSidebar = () => {
     }
   }, [location.search]);
   return (
-    <Sidebar className="sm:w-full md:w-56">
+    <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Link to="/dashboard?tab=profile">
+          <Link to="/dashboard?tab=profile"> 
             <Sidebar.Item
               active={tab === "profile"}
               icon={HiUser}
               title="Home"
               label={"User"}
               labelColor="dark"
+              as="div"
             >
               Profile
             </Sidebar.Item>

@@ -17,12 +17,13 @@ const DashBoard = () => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
-      <div className="md: w-56">
+
+      <div className=" md:w-56">
         {/* Sidebar */}
         <DashSidebar>
-
         </DashSidebar>
       </div>
+      
          {/* profile */}
          {tab === 'profile' && <DashProfile></DashProfile>   }
         
