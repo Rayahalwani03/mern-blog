@@ -32,7 +32,6 @@ export const signup = async (req, res, next) => {
     next(err);
   }
 };
-
 export const signin = async (req, res, next) => {
   const { email, password } = req.body; // req header body...
 

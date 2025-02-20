@@ -30,6 +30,7 @@ const FooterCom = () => {
             <Footer.LinkGroup col>
               <Footer.Link href="#" target="_blank" rel="noopener noreferrer">
                 Portfolio
+                
               </Footer.Link>
               <Footer.Link href="#" target="_blank" rel="noopener noreferrer">
                 Ray's CV

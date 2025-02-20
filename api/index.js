@@ -4,6 +4,7 @@ import dotenv from 'dotenv'; // for the env the env to not show it in git
 import userRoute from'./route/user.route.js'; // js is most and the userRoute cosider it as var and the app will know 
 // js is most and the userRoute cosider it as var and the app will know
 import authRoute from './route/auth.route.js'; // js is most and the userRoute cosider it as var and the app will know
+import cookieParser from 'cookie-parser';
 
 
 dotenv.config(); // to use the .env file
@@ -16,8 +17,8 @@ mongoose.connect(process.env.MONGO)
     console.log(error);
 })
 const app = express();
-
 app.use(express.json());
+app.use(cookieParser());
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
