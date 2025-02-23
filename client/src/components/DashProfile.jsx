@@ -12,16 +12,17 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { app } from "../firebase";
 import {
-  updateFailure,
-  updateStart,
-  updateSuccess,
+  deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure
+  signoutSuccess,
+  updateFailure,
+  updateStart,
+  updateSuccess
 } from "../redux/user/useSlice";
 
 const DashProfile = () => {
-  const { currentUser,error } = useSelector((state) => state.user);
+  const { currentUser, errormodal } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setimageFileUrl] = useState(null);
   const [imageFileUploadingProgress, setImageFileUploadingProgress] =
@@ -133,25 +134,37 @@ const DashProfile = () => {
 
   const handleDeleteUser = async () => {
     setShowModal(false);
-    try { dispatch(deleteUserStart());
+    try {
+      dispatch(deleteUserStart());
       const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
-
       });
       const data = await res.json();
-      if(!res.ok){
-        dispatch(deleteUserFailure(data.message))
-      }
-      else{
+      if (!res.ok) {
+        dispatch(deleteUserFailure(data.message));
+      } else {
         dispatch(deleteUserSuccess(data));
       }
-
-
     } catch (error) {
-      dispatch(deleteUserFailure(error.message))
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
       <h1 className="my-7 text-center font-semibold text-3xl"> Profile</h1>
@@ -193,8 +206,7 @@ const DashProfile = () => {
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="user"
-            className={`rounded-full h-full w-full object-cover border-8 border-[lightgray]
-               ${imageFileUploadingProgress < 100 ? "opacity-60" : ""}`}
+            className={`rounded-full h-full w-full object-cover border-8 border-[lightgray] ${imageFileUploadingProgress < 100 ? "opacity-60" : ""}`}
           />
         </div>
         {imageFileUploadError && (
@@ -230,7 +242,9 @@ const DashProfile = () => {
         <span onClick={() => setShowModal(true)} className="cursor-pointer">
           Delete Account
         </span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span onClick={handleSignout} className="cursor-pointer">
+          Sign Out
+        </span>
       </div>
       {updateUserSuccess && (
         <Alert color="success" className="mt-5">
@@ -243,9 +257,9 @@ const DashProfile = () => {
           {updateUserError}
         </Alert>
       )}
-            {error && (
+      {errormodal && (
         <Alert color="failure" className="mt-5">
-          {error}
+          {errormodal}
         </Alert>
       )}
 
@@ -264,7 +278,7 @@ const DashProfile = () => {
             </h3>
 
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDeleteUser}>
+              <Button color="failure" onClick={() => handleDeleteUser()}>
                 Yes
               </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>

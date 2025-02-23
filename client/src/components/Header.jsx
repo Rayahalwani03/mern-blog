@@ -15,12 +15,29 @@ import { FaMoon, FaSun } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { toggleTheme } from "../redux/theme/themeSlice";
+import { signoutSuccess } from "../redux/user/useSlice";
 
 const Header = () => {
   const path = useLocation().pathname;
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
   return (
     <Navbar className="border-b-2">
       <Link
@@ -28,7 +45,7 @@ const Header = () => {
         className="self-center whitespace-nowrap text-sm font-semibold dark:text-white sm:text-xl "
       >
         <span className="px-3 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-md text-white">
-          Ray's
+          Rays
         </span>
         Blog
       </Link>
@@ -78,7 +95,7 @@ const Header = () => {
                 <DropdownItem>Profile</DropdownItem>
               </Link>
               <DropdownDivider />
-              <DropdownItem>Sign Out</DropdownItem>
+              <DropdownItem onClick={handleSignout} >Sign Out</DropdownItem>
             </DropdownHeader>
           </Dropdown>
         ) : (

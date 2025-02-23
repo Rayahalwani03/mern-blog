@@ -50,6 +50,11 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    signoutSuccess: (state) => {
+        state.currentUser = null; 
+        state.loading = false;
+        state.error = null;
+      },
   },
 });
 
@@ -62,7 +67,8 @@ export const {
   updateFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure
+  deleteUserFailure,
+  signoutSuccess
 } = userSlice.actions;
 
 //if we use export default, we could only export one thing.
