@@ -18,11 +18,12 @@ import {
   signoutSuccess,
   updateFailure,
   updateStart,
-  updateSuccess
+  updateSuccess,
 } from "../redux/user/useSlice";
+import {Link} from 'react-router-dom'
 
 const DashProfile = () => {
-  const { currentUser, errormodal } = useSelector((state) => state.user);
+  const { currentUser, errormodal,loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setimageFileUrl] = useState(null);
   const [imageFileUploadingProgress, setImageFileUploadingProgress] =
@@ -206,7 +207,9 @@ const DashProfile = () => {
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="user"
-            className={`rounded-full h-full w-full object-cover border-8 border-[lightgray] ${imageFileUploadingProgress < 100 ? "opacity-60" : ""}`}
+            className={`rounded-full h-full w-full object-cover border-8 border-[lightgray] ${
+              imageFileUploadingProgress < 100 ? "opacity-60" : ""
+            }`}
           />
         </div>
         {imageFileUploadError && (
@@ -234,9 +237,17 @@ const DashProfile = () => {
           onChange={handleChange}
         />
 
-        <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-          Update
+        <Button type="submit" gradientDuoTone="purpleToBlue" outline disabled={loading || imageFileUploading}>
+          { loading ? 'Loading...': 'Update'}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to={'/create-post'}>
+            
+            <Button type="button" gradientDuoTone="purpleToBlue" outline className="w-full">
+              Create Post  
+            </Button>
+          </Link>
+        )}
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span onClick={() => setShowModal(true)} className="cursor-pointer">
