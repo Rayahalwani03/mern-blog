@@ -77,7 +77,7 @@ const DashProfile = () => {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setImageFileUploadingProgress(progress.toFixed(0));
       },
-      (error) => {
+      (error) => { console.log(error)
         setImageFileUploadError("Could not upload image must less than 2MB");
         setImageFileUploadingProgress(null);
         setImageFile(null);
