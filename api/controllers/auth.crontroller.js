@@ -67,9 +67,9 @@ export const facebook = async (req,res,next) =>{
   const {name, email, facebookPhotoUrl} = req.body;
 
   try{
-    const user = await User.findOne({email});
-    if(user){
-      const token = jwt.sign({id: user._id, isAdmin: user.isAdmin}, process.env.JWT_SECRET);
+    const user = await User.findOne({email}); // we can add it to reqursts
+    if(user){ //_ for mongodb
+      const token = jwt.sign({id: user._id , isAdmin: user.isAdmin}, process.env.JWT_SECRET);
       const {password, ...rest} = user._doc;
       res.status(200).cookie('access_token', token,{
         httpOnly:true,
@@ -88,7 +88,7 @@ export const facebook = async (req,res,next) =>{
       const token = jwt.sign({id: newUser._id, isAdmin: newUser.isAdmin}, process.env.JWT_SECRET);
       const {password, ...rest} = newUser._doc;
       res.status(200)
-      .cookie('access_token', token,{
+      .cookie('access_token', token, {
         httpOnly:true,
       }).json(rest);
     }
