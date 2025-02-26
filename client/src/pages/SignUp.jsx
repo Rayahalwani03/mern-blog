@@ -12,7 +12,7 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim()});
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,11 +28,13 @@ const SignUp = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
 
       if (data.success === false) {
         return setErrorMessage(data.message);
       }
+      
       setLoading(false);
       if(res.ok){navigate("/sign-in")}
     } catch (error) {
@@ -51,7 +53,7 @@ const SignUp = () => {
         <div className="flex-1">
           <Link to="/" className="  font-bold dark:text-white  text-4xl">
             <span className="px-3 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-md text-white">
-              Ray's
+              Rays
             </span>
             Blog
           </Link>

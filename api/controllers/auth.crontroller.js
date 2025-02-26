@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { errorHandler } from "../../utils/error.js";
 import User from "../models/user.model.js";
 
+//////////////
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body; // req header body...
 
@@ -16,7 +17,6 @@ export const signup = async (req, res, next) => {
   ) {
     next(errorHandler(400, "All fields are required"));
   }
-
   const hashPassword = bcryptjs.hashSync(password, 10);
 
   const newUser = new User({
@@ -32,6 +32,8 @@ export const signup = async (req, res, next) => {
     next(err);
   }
 };
+////////////////////////
+
 export const signin = async (req, res, next) => {
   const { email, password } = req.body; // req header body...
 

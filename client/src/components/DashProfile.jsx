@@ -64,7 +64,7 @@ const DashProfile = () => {
     //     }
     //   }
     // }
-    imageFileUploading(true);
+    setImageFileUploading(true);
     setImageFileUploadError(null);
     const storage = getStorage(app);
     const fileName = new Date().getTime() + imageFile.name;
@@ -82,13 +82,13 @@ const DashProfile = () => {
         setImageFileUploadingProgress(null);
         setImageFile(null);
         setimageFileUrl(null);
-        imageFileUploading(false);
+        setImageFileUploading(false);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setimageFileUrl(downloadURL);
           setFormData({ ...formData, profilePicture: downloadURL });
-          imageFileUploading(false);
+          setImageFileUploading(false);
         });
       }
     );

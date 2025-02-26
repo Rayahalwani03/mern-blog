@@ -18,7 +18,9 @@ mongoose.connect(process.env.MONGO)
     console.log(error);
 })
 const app = express();
-app.use(express.json());
+
+app.use(express.json());// for body requests 
+
 app.use(cookieParser());
 
 app.listen(3000, () => {
