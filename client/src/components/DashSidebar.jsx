@@ -45,8 +45,7 @@ const DashSidebar = () => {
               active={tab === "profile"}
               icon={HiUser}
               title="Home"
-              
-              label={ currentUser.isAdmin ?  "Admin" :  "User" }
+              label={currentUser.isAdmin ? "Admin" : "User"}
               labelColor="dark"
               as="div"
             >
@@ -57,12 +56,10 @@ const DashSidebar = () => {
           {currentUser.isAdmin && (
             <Link to="/dashboard?tab=posts">
               <Sidebar.Item
-                active={tab === "posts"}
+                active={tab === "posts"} // to determine whether the sidebar item should appear as "active"
                 icon={HiDocumentText}
                 title="Home"
-                labelColor="dark"
-                as="div"
-              >
+                as="div">
                 Posts
               </Sidebar.Item>
             </Link>
