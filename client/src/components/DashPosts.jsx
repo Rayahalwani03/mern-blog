@@ -6,33 +6,57 @@ import { Link } from "react-router-dom";
 const DashPosts = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
-  //we can't use async in use effect
+  const [showMore, setShowMore] = useState(true);
 
   useEffect(() => {
-    // to control the render
     const fetchPosts = async () => {
-      //  fetching data is an asynchronous operation. This means the request to the API does not complete immediately, and we need to wait for the response before using the data.
-      // synchronous, the entire UI would freeze until the server responds. But since it's asynchronous, React can keep rendering while waiting for data.
-
       try {
-        const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
+        const res = await fetch(
+          `/api/post/getposts?userId=${currentUser?._id}`
+        );
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
+          if (data.posts.length < 5) {
+            setShowMore(false);
+          }
         }
       } catch (error) {
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
+
+    if (currentUser?.isAdmin) {
       fetchPosts();
     }
-  }, [currentUser._id]);
+  }, [currentUser?._id]);
+
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length;
+
+    try {
+      const res = await fetch(
+        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+      );
+      const data = await res.json();
+      if(res.ok){
+        setUserPosts((prev)=> [...prev, ...data.posts]);
+        if (data.posts.length < 9){
+          setShowMore(false)
+        }
+
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
-    <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar
-     scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+    <div
+      className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar
+     scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500"
+    >
+      {currentUser?.isAdmin && userPosts.length > 0 ? (
         <>
           <Table hoverable className="shadow-md">
             <Table.Head>
@@ -46,9 +70,12 @@ const DashPosts = () => {
               </Table.HeadCell>
             </Table.Head>
 
-            {userPosts.map((post) => (
-              <Table.Body className="divide-y">
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+            <Table.Body className="divide-y">
+              {userPosts.map((post) => (
+                <Table.Row
+                  key={post._id}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
                   <Table.Cell>
                     {new Date(post.updatedAt).toLocaleDateString()}
                   </Table.Cell>
@@ -61,7 +88,6 @@ const DashPosts = () => {
                       />
                     </Link>
                   </Table.Cell>
-
                   <Table.Cell>
                     <Link
                       className="font-medium text-gray-900 dark:text-white"
@@ -70,15 +96,12 @@ const DashPosts = () => {
                       {post.title}
                     </Link>
                   </Table.Cell>
-
                   <Table.Cell>{post.category}</Table.Cell>
-
                   <Table.Cell>
                     <span className="font-medium text-red-500 hover:underline cursor-pointer">
                       Delete
                     </span>
                   </Table.Cell>
-
                   <Table.Cell>
                     <Link
                       className="text-teal-500 hover:underline"
@@ -88,13 +111,22 @@ const DashPosts = () => {
                     </Link>
                   </Table.Cell>
                 </Table.Row>
-              </Table.Body>
-            ))}
+              ))}
+            </Table.Body>
           </Table>
+
+          {showMore && (
+            <button
+              onClick={handleShowMore}
+              className="w-full text-teal-500 self-center text-sm py-7"
+            >
+              show more
+            </button>
+          )}
         </>
       ) : (
-        <p> You have no post yet</p>
-      )}{" "}
+        <p>You have no posts yet</p>
+      )}
     </div>
   );
 };
