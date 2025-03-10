@@ -91,42 +91,34 @@ try{
 }
 }
 
-import Post from '../models/Post'; // Assuming Post is a Mongoose model
-import { verifyToken } from '../middleware/verifyToken'; // Your token verification middleware
 
 // Controller for updating a post
-const updatepost = async (req, res,next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId){
-    return next(errorHandler(403, 'you are not allowed to update this post'));
+export const updatedpost = async (req, res, next) => {
+  // Check if the user is allowed to update the post
+  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    return next(errorHandler(403, 'You are not allowed to update this post'));
   }
-
-  if (!post) {
-    return next(errorHandler(403, 'Post not found'));
-  }
-  
   try {
-    // Find the post by postId
-    const post = await Post.findByIdAndUpdate(postId);
+    // Find and update the post
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $set: {
+          title: req.body.title,
+          category: req.body.category,
+          content: req.body.content,
+          image: req.body.image,
+        },
+      },
+      { new: true } // Ensure that the updated post is returned
+    );
 
-
-    // Check if the current user is the owner of the post (or an admin)
- 
-
-    // Update the post data, keeping existing values as fallback
-    post.title = title || post.title;
-    post.content = content || post.content;
-    post.category = category || post.category;
-    post.image = image || post.image;
-
-    // Save the updated post to the database
-    await post.save();
-
-    // Respond with a success message and the updated post data
-    return res.status(200).json({ message: "Post updated successfully", post });
+    res.status(200).json(updatedPost);
+  
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error", error: error.message });
+
+    return next(error);
   }
 };
 
-export default updatepost;
+
