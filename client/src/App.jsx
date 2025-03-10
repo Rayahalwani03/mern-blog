@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute"
 import CreatePost from "./pages/CreatePost";
+import UpdatePost from "./pages/UpdatePost";
 
 
 function App() {
@@ -27,7 +28,8 @@ function App() {
 
           <Route element={<OnlyAdminPrivateRoute/>}>
           <Route path="/create-post" element={<CreatePost />}/>
-          </Route>
+          <Route path="/update-post/:postId"  element={<UpdatePost />}/>
+          </Route> 
             
           <Route path="/projects" element={<Projects />} />
           <Route path="/sign-in" element={<SignIn />} />
