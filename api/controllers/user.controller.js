@@ -126,14 +126,14 @@ export const getUsers = async(req, res, next)=>{ //async cuz we are gettign info
   if(!req.user.isAdmin){
     return next(errorHandler(403, 'You are not allowed to see all users'))
   }
-try{ 
+try{
   const startIndex = parseInt(req.query.startIndex) || 0;
   const limit = parseInt(req.query.limit) || 10;
   const sortDiraction = req.query.sort === 'asc'? 1 : -1; //else desc
   
   const users = await User.find()
   .sort({createdAt: sortDiraction})
-  .skip(startIndex) // 
+  .skip(startIndex) 
   .limit(limit)
 
   const usersWithoutPassword = users.map((user)=>{
