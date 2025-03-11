@@ -4,7 +4,6 @@ import  { create, deletepost, getposts,updatedpost } from "../controllers/post.c
 
 const router = express.Router();
 
-
 router.post('/create',verifyToken, create); //post req in insomnia 
 router.get('/getposts', getposts);
 router.delete('/deletepost/:postId/:userId',verifyToken, deletepost);

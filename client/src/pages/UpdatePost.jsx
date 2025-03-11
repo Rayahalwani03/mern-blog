@@ -34,7 +34,7 @@ import {
             const data = await res.json();
             if(!res.ok){
                 console.log(data.message);
-                setPublishError(data.message)
+                setPublishError(data.message);
                 return;
             }
             if(res.ok){
@@ -46,11 +46,8 @@ import {
         }
         catch(error){
             console.log(error.message);
-            
-
         }
-
-    }, [postId]);
+    }, [postId]); //condition 
   
     const handleUploadImage = async () => {
       try {
@@ -107,7 +104,7 @@ import {
         }
         if (res.ok) {
           setPublishError(null);
-          navigate(`/post/${data.slug}`)
+          navigate(`/post/${data.slug}`) //slug is for the SEO
         }
       } catch (error) {
         console.log(error);
@@ -197,6 +194,5 @@ import {
       </div>
     );
   };
-  
   export default UpdatePost;
   
