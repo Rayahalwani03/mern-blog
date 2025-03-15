@@ -6,6 +6,7 @@ import userRoute from'./route/user.route.js'; // js is most and the userRoute co
 import authRoute from './route/auth.route.js'; // js is most and the userRoute cosider it as var and the app will know
 import cookieParser from 'cookie-parser';
 import postRoutes from './route/post.route.js'
+import commentRoute from './route/comment.route.js'
 
 
 dotenv.config(); // to use the .env file
@@ -34,6 +35,7 @@ app.use('/api/user', userRoute); // we are going to use the get request
 
  app.use('/api/auth', authRoute); // we are going to use the get request
  app.use('/api/post',  postRoutes); // we are going to use the get request
+ app.use('/api/comment',  commentRoute); // we are going to use the get request
 
 
 
