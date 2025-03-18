@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteUser, signout, test, updateUser,getUsers } from "../controllers/user.controller.js";
+import { deleteUser, signout, test, updateUser,getUsers, getUser } from "../controllers/user.controller.js";
 import { verifyToken } from "../../utils/verifyUser.js";
 
 
@@ -10,4 +10,7 @@ router.put('/update/:userId', verifyToken, updateUser);    //put and post to upd
 router.delete('/delete/:userId',verifyToken, deleteUser);
 router.post('/signout', signout);
 router.get('/getusers', verifyToken,getUsers); //prevent a random person from getting the information
+
+router.get('/:userId',getUser); //prevent a random person from getting the information
+
 export default router;

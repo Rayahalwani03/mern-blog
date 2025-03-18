@@ -1,19 +1,37 @@
 import { Alert, Button, Textarea } from "flowbite-react";
-import { useState } from "react";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import PropTypes from 'prop-types';
+import Comment from "../components/Comment";
 
 const CommentSection = ({ postId }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [commentError, setCommentError] = useState(null);
+  const [comments, setComments] = useState([]);
+  console.log(comments);
+
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const res = await fetch(`/api/comment/getPostComments/${postId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setComments(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getComments();
+  }, [postId]); //عحسب البوست بيج بيتغير الكومنتس
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (comment.length > 200) {
-      setCommentError('Too long');
+      setCommentError("Too long");
       return;
     }
 
@@ -38,7 +56,6 @@ const CommentSection = ({ postId }) => {
         }),
       });
 
-    
       const data = await res.json();
       if (!res.ok) {
         console.log(data);
@@ -46,6 +63,7 @@ const CommentSection = ({ postId }) => {
       if (res.ok) {
         setComment("");
         setCommentError(null);
+        setComments([data, ...comments]); //مشان يطلع الكومنت الجديد 
       }
     } catch (error) {
       setCommentError(error.message);
@@ -94,11 +112,7 @@ const CommentSection = ({ postId }) => {
             <p className="text-gray-500">
               {200 - comment.length} characters remaining
             </p>
-            <Button
-              outline
-              gradientDuoTone="purpleToBlue"
-              type="submit"
-            >
+            <Button outline gradientDuoTone="purpleToBlue" type="submit">
               Submit
             </Button>
           </div>
@@ -109,12 +123,29 @@ const CommentSection = ({ postId }) => {
           )}
         </form>
       )}
+      {comments.length === 0 ? (
+        <p className="text-sm my-5">No comments yet</p>
+      ) : (
+        <>
+          <div className="text-sm my-5 flex items-center gap-1">
+            <p>Comments</p>
+            <div className="border border-gray-400 py-1 px-2 rounded-sm">
+              <p>{comments.length}</p>
+            </div>
+          </div>
+          {
+              comments.map(comment => (
+                <Comment key={comment._id} comment={comment}/>
+              ))
+            }
+        </>
+        
+      )}
     </div>
   );
 };
 
 export default CommentSection;
-
 
 CommentSection.propTypes = {
   postId: PropTypes.string.isRequired, // Ensures postId is required and should be a string
