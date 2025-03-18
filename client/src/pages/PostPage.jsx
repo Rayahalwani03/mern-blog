@@ -10,6 +10,8 @@ const PostPage = () => {
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
 
+  console.log(error)
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -29,6 +31,7 @@ const PostPage = () => {
       } catch (err) {
         setLoading(false)
         setError(true)
+        console.log(err)
 
       }
     };
