@@ -2,7 +2,7 @@ import { Alert, Button, Textarea } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Comment from "../components/Comment";
 
 const CommentSection = ({ postId }) => {
@@ -64,39 +64,49 @@ const CommentSection = ({ postId }) => {
       if (res.ok) {
         setComment("");
         setCommentError(null);
-        setComments([data, ...comments]); //مشان يطلع الكومنت الجديد 
+        setComments([data, ...comments]); //مشان يطلع الكومنت الجديد
       }
     } catch (error) {
       setCommentError(error.message);
     }
   };
-   const handleLike = async (commentId) =>{
+  const handleLike = async (commentId) => {
     console.log("Like button clicked for comment:", commentId);
 
-    try{
-     if(!currentUser){
-      navigate('/sign-in');
-      return 
-     }
-     const res = await fetch(`/api/comment/likeComment/${commentId} `,{
-      method:'PUT'
-     }); //we are getting from the input 
-     if(res.ok){
-      const data = await res.json()
-      setComments(comments.map((comment)=>
-        comment._id  === commentId ? {
-          ...comment, 
-          likes: data.likes,
-          numberOfLikes: data.numberOfLikes
-        } : comment
-         ) )
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
       }
-     
-    }catch(error){
-      console.log(error.message)
+      const res = await fetch(`/api/comment/likeComment/${commentId} `, {
+        method: "PUT",
+      }); //we are getting from the input
+      if (res.ok) {
+        const data = await res.json();
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.numberOfLikes,
+                }
+              : comment
+          )
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
     }
-  
-   };
+  };
+
+  const handleEdit = async (comment, editedContent) => {
+    setComments(
+      comments.map((c)=> 
+      c._id === comment._id ?{...c, content: editedContent} : c
+      )
+    );
+  };
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
       {currentUser ? (
@@ -161,13 +171,10 @@ const CommentSection = ({ postId }) => {
               <p>{comments.length}</p>
             </div>
           </div>
-          {
-              comments.map(comment => (
-                <Comment key={comment._id} comment={comment} onLike={handleLike}/>
-              ))
-            }
+          {comments.map((comment) => (
+            <Comment key={comment._id} comment={comment} onLike={handleLike} onEdit={handleEdit} />
+          ))}
         </>
-        
       )}
     </div>
   );
