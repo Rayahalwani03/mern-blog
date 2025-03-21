@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import PropTypes from "prop-types";
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
   const [user, setUser] = useState({});
   const { currentUser } = useSelector((state) => state.user);
   const [isEditing, setIsEditing] = useState(false);
@@ -32,28 +32,25 @@ const Comment = ({ comment, onLike, onEdit }) => {
     setEditedContent(comment.content);
   };
 
-  const handleSave = async()=>{
-
-    try{
-      const res = await fetch(`/api/comment/editComment/${comment._id}`,
-        {
-          method:'PUT',
-          headers:{
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            content: editedContent //when we want to edit stuff in the body 
-          })
-        }
-      );
-      if(res.ok){
-        setIsEditing(false)
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`/api/comment/editComment/${comment._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: editedContent, //when we want to edit stuff in the body
+        }),
+      });
+      if (res.ok) {
+        setIsEditing(false);
         onEdit(comment, editedContent);
       }
-    }catch(error){
-      console.log(error.message)
+    } catch (error) {
+      console.log(error.message);
     }
-  }
+  };
 
   return (
     <div className="flex p-4 border-b dark:border-gray-600 text-sm">
@@ -74,6 +71,7 @@ const Comment = ({ comment, onLike, onEdit }) => {
             {moment(comment.createdAt).fromNow()}
           </span>
         </div>
+
         {isEditing ? (
           <>
             <Textarea
@@ -81,14 +79,24 @@ const Comment = ({ comment, onLike, onEdit }) => {
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
             />
+            
             <div className="flex justify-end gap-2 text-xs">
-              <Button type="button" size="sm" outline gradientDuoTone="purpleToBlue"
-               onClick={handleSave}>
+              <Button
+                type="button"
+                size="sm"
+                outline
+                gradientDuoTone="purpleToBlue"
+                onClick={handleSave}
+              >
                 Save
               </Button>
 
-              <Button type="button" size="sm" outline gradientDuoTone="purpleToBlue" 
-              onClick={()=> setIsEditing(false)}
+              <Button
+                type="button"
+                size="sm"
+                outline
+                gradientDuoTone="purpleToBlue"
+                onClick={() => setIsEditing(false)}
               >
                 Cancel
               </Button>
@@ -117,13 +125,22 @@ const Comment = ({ comment, onLike, onEdit }) => {
               </p>
               {currentUser &&
                 (currentUser._id === comment.userId || currentUser.isAdmin) && (
-                  <button
-                    type="button"
-                    className="text-gray-400 hover:text-blue-500"
-                    onClick={handleEdit}
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      className="text-gray-400 hover:text-blue-500"
+                      onClick={handleEdit}>
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      className="text-gray-400 hover:text-red-500"
+                      onClick={() => onDelete(comment._id)}
+                    >
+                      Delete
+                    </button>
+                  </>
                 )}
             </div>
           </>

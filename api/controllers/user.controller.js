@@ -133,7 +133,7 @@ try{
   
   const users = await User.find()
   .sort({createdAt: sortDiraction})
-  .skip(startIndex) 
+  .skip(startIndex)
   .limit(limit)
 
   const usersWithoutPassword = users.map((user)=>{
