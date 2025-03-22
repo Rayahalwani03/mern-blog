@@ -1,11 +1,10 @@
-import { Alert, Button, Textarea } from "flowbite-react";
+import { Alert, Button, Modal, Textarea } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Comment from "../components/Comment";
-import { Modal } from "flowbite-react";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const CommentSection = ({ postId }) => {
   const navigate = useNavigate();
@@ -35,15 +34,6 @@ const CommentSection = ({ postId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (comment.length > 200) {
-      setCommentError("Too long");
-      return;
-    }
-
-    if (comment.trim().length === 0) {
-      setCommentError("Comment cannot be empty.");
-      return;
-    }
     if (!currentUser) {
       setCommentError("You must be signed in to comment.");
       return;
@@ -62,8 +52,9 @@ const CommentSection = ({ postId }) => {
       });
 
       const data = await res.json();
+
       if (!res.ok) {
-        console.log(data);
+        setCommentError(data.message);
       }
       if (res.ok) {
         setComment("");
@@ -114,31 +105,23 @@ const CommentSection = ({ postId }) => {
 
   const handleDelete = async (commentId) => {
     // منمسكها من الايدي مشان نمحيه
-  setShowModal(false)
-    try{ 
-
-      if(!currentUser){
-        navigate('/sign-in')
-        return
+    setShowModal(false);
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
       }
-      const res = await fetch(`/api/comment/deleteComment/${commentId}`,{
-        method:'DELETE',
-
+      const res = await fetch(`/api/comment/deleteComment/${commentId}`, {
+        method: "DELETE",
       });
-      if(res.ok){
+      if (res.ok) {
         const data = await res.json();
-       
-            setComments(
-              comments.filter((comment)=> comment._id !== commentId)
-            );
-          
-          }
-      
 
-    }catch(error){
-    console.log(error)
+        setComments(comments.filter((comment) => comment._id !== commentId));
+      }
+    } catch (error) {
+      console.log(error);
     }
-
   };
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
@@ -217,32 +200,34 @@ const CommentSection = ({ postId }) => {
             />
           ))}
           <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-            <h3 className="text-gray-500 dark:text-gray-400 text-lg mb-5">
-              Are you want to delete this comment? 
-            </h3>
+            show={showModal}
+            onClose={() => setShowModal(false)}
+            popup
+            size="md"
+          >
+            <Modal.Header />
+            <Modal.Body>
+              <div className="text-center">
+                <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+                <h3 className="text-gray-500 dark:text-gray-400 text-lg mb-5">
+                  Are you want to delete this comment?
+                </h3>
 
-            <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={()=> handleDelete(commentToDelete)}>
-                yes
-              </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+                <div className="flex justify-center gap-4">
+                  <Button
+                    color="failure"
+                    onClick={() => handleDelete(commentToDelete)}
+                  >
+                    yes
+                  </Button>
+                  <Button color="gray" onClick={() => setShowModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
         </>
-        
       )}
     </div>
   );

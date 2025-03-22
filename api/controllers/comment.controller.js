@@ -3,104 +3,117 @@ import Comment from "../models/comment.model.js";
 
 export const createComment = async (req, res, next) => {
   try {
-    const { content, postId, userId } = req.body;
-    if (userId !== req.user.id) {
-      return next(errorHandler(403, "you are not allowed to comment"));
-    }
-    const newComment = new Comment({
-      content,
-      postId,
-      userId,
-    });
-    await newComment.save();
+      const { content, postId, userId } = req.body;
 
-    res.status(200).json(newComment);
-  } catch (error) {
-    next(error);
+      // Get the start and end of the day
+      const now = new Date();
+      const startOfDay = new Date(now.setHours(0, 0, 0, 0)); // Set time to midnight
+      const endOfDay = new Date(now.setHours(23, 59, 59, 999)); // Set time to 11:59 PM
+      
+      // Count the user's comments on this specific post today
+      const commentsToday = await Comment.countDocuments({
+        userId,
+        postId, // Only count comments for the specific post
+        createdAt: { $gte: startOfDay, $lte: endOfDay } // Comments created today
+      });
+
+      // Check if user has posted 4 comments today for this specific post
+      if (commentsToday >= 4) {
+          return next(errorHandler(403, "You can only comment 4 times per post per day"));
+      }
+
+      if (!content || content.trim() === "") {
+        return next(errorHandler(400, "Comment cannot be empty"));
+    }
+
+    if (content.length > 200) {
+      return next(errorHandler(400, "Comment cannot be empty"));
   }
-};
+
+
+      // Check if userId matches the logged-in user's ID
+      if(userId !== req.user.id){
+          return next(errorHandler(403, "You are not allowed to create a comment on this post"))
+      }
+
+      const newComment = new Comment({
+          content,
+          postId,
+          userId
+      });
+
+      await newComment.save();
+      res.status(200).json(newComment);
+
+  } catch(err){
+      next(err)
+  }
+}
 
 export const getPostComments = async (req, res, next) => {
   try {
-    const comments = await Comment.find({ postId: req.params.postId }).sort({
-      //post id is declard in the route
-      createdAt: -1,
-    });
-    res.status(200).json(comments);
-  } catch (error) {
-    next(error);
+      const comments = await Comment.find({postId: req.params.postId}).sort({createdAt: -1});
+      res.status(200).json(comments);
+  }catch(err){
+      next(err)
   }
-};
+}
 
 export const likeComment = async (req, res, next) => {
-  try {
-    //////
-    const comment = await Comment.findById(req.params.commentId);
-    if (!comment) {
-      return next(errorHandler(404, "Comment not found"));
-    }
-    const userIndex = comment.likes.indexOf(req.user.id); // to check in the array of the likes if the user liked it or not
-    if (userIndex === -1) {
-      // not availabe in that array
-      comment.numberOfLikes += 1;
-      comment.likes.push(req.user.id);
-    } else {
-      comment.numberOfLikes -= 1;
-      comment.likes.splice(userIndex, 1);
-    }
-    ///////
-
-    await comment.save();
-    res.status(200).json(comment);
-  } catch (error) {
-    next(error);
+  try{
+      const comment = await Comment.findById(req.params.commentId);
+      if(!comment){
+          return next(errorHandler(404, "Comment not found"))
+      }
+      const userIndex = comment.likes.indexOf(req.user.id);
+      if(userIndex === -1){
+          comment.numberOfLikes += 1;
+          comment.likes.push(req.user.id);
+      } else{
+          comment.numberOfLikes -= 1;
+          comment.likes.splice(userIndex, 1);
+      }
+      await comment.save();
+      res.status(200).json(comment);
+  } catch(err){
+      next(err)
   }
-};
+}
 
 export const editComment = async (req, res, next) => {
-  ///////
-  try {
-    const comment = await Comment.findById(req.params.commentId);
-    if(!comment){
-      return next(errorHandler(404, 'Comment not found'))
-    }
-    if(comment.userId !== req.user.id && !req.user.isAdmin ){ //req.uesr if it is authenticated or not 
-      return next(errorHandler(403, 'You are not allowed to edit this comment'))
-    }
-    /////////
-
-    const editedComment = await Comment.findByIdAndUpdate(
-      req.params.commentId,
-      {
-        content : req.body.content,
-      },
-      {new: true}
-    );
-    res.status(200).json(editedComment);
-
-    // 
-  } catch (error) {
-    next(error);
-  }
-};
-
-export  const deleteComment = async(req,res,next)=>{
   try{
-    const comment = await Comment.findById(req.params.commentId);
-     if(!comment){
-      return next(errorHandler(404, 'Comment not found'));
-     }
-     if(comment.userId !== req.user.id && !req.user.isAdmin ){ //req.uesr if it is authenticated or not 
-      return next(errorHandler(403, 'You are not allowed to edit this comment'))
-    }
+      const comment = await Comment.findById(req.params.commentId);
+      if(!comment){
+          return next(errorHandler(404, "Comment not found"))
+      }
+      if(comment.userId !== req.user.id && !req.user.isAdmin){
+          return next(errorHandler(403, "You are not allowed to edit this comment"))
+      }
+      const editedComment = await Comment.findByIdAndUpdate(
+          req.params.commentId,
+          {
+              content: req.body.content,
+          },
+          {new: true}
+      );
+      res.status(200).json(editedComment);
+  }catch(err){
+      next(err)
+  }
+}
 
-
-   await Comment.findByIdAndDelete(
-      req.params.commentId
-    );
-    res.status(200).json('the comment has been deleted');
-
-  }catch(error){
-    next(error)
+export const deleteComment = async (req, res, next) => {
+  try{
+      const comment = await Comment.findById(req.params.commentId);
+      if(!comment){
+          return next(errorHandler(404, "Comment not found"))
+      }
+      if(comment.userId !== req.user.id && !req.user.isAdmin){
+          return next(errorHandler(403, "You are not allowed to delete this comment"))
+      }
+      await Comment.findByIdAndDelete(req.params.commentId);
+      res.status(200).json("Comment has been deleted");
+  } catch(err){
+      next(err)
   }
 }
