@@ -77,6 +77,18 @@ const DashSidebar = () => {
             </Link>
           )}
 
+          <>
+          <Link to="/dashboard?tab=comments">
+              <Sidebar.Item
+                active={tab === "comments"} // to determine whether the sidebar item should appear as "active"
+                icon={HiOutlineUserGroup}
+                title="Comments"
+                as="div">
+                Comments
+              </Sidebar.Item>
+            </Link>
+          </>
+
           <Sidebar.Item
             icon={HiArrowSmRight}
             title="Sign Out"
