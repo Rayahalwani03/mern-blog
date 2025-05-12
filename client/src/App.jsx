@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import FloatingSocials from "./components/FloatingSocials";
 import FooterCom from "./components/FooterCom";
 import Header from "./components/Header";
@@ -15,13 +15,21 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import UpdatePost from "./pages/UpdatePost";
 
+// Wrapper component to handle location-based rendering
+const SocialIconsWrapper = () => {
+  const location = useLocation();
+  const isDashboardRoute = location.pathname.includes("/dashboard");
+
+  return !isDashboardRoute ? <FloatingSocials /> : null;
+};
+
 function App() {
   return (
     <>
       <BrowserRouter>
         <ScrollToTop />
         <Header />
-        <FloatingSocials />
+        <SocialIconsWrapper />
         <Routes>
           <Route index element={<Home />} />
           <Route path="/about" element={<About />} />

@@ -6,6 +6,7 @@ import {
   HiChartPie,
   HiDocumentText,
   HiOutlineUserGroup,
+  HiUser,
 } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -15,12 +16,10 @@ const DashSidebar = () => {
   const location = useLocation();
   const [tab, setTab] = useState("");
   const dispatch = useDispatch();
-  const { currentUser, errormodal, loading } = useSelector(
-    (state) => state.user
-  );
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search); // search is a method from the constructor
+    const urlParams = new URLSearchParams(location.search);
     const tabFormUrl = urlParams.get("tab");
     if (tabFormUrl) {
       setTab(tabFormUrl);
@@ -42,16 +41,28 @@ const DashSidebar = () => {
       console.log(error.message);
     }
   };
+
   return (
     <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-2">
+          <Link to="/dashboard?tab=profile">
+            <Sidebar.Item
+              active={tab === "profile"}
+              icon={HiUser}
+              label={currentUser.isAdmin ? "Admin" : "User"}
+              labelColor="dark"
+              as="div"
+            >
+              Profile
+            </Sidebar.Item>
+          </Link>
+
           {currentUser && currentUser.isAdmin && (
             <Link to="/dashboard?tab=dash">
               <Sidebar.Item
                 active={tab === "dash" || !tab}
                 icon={HiChartPie}
-                title="Home"
                 as="div"
               >
                 Dashboard
@@ -60,47 +71,41 @@ const DashSidebar = () => {
           )}
 
           {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=posts">
-              <Sidebar.Item
-                active={tab === "posts"} // to determine whether the sidebar item should appear as "active"
-                icon={HiDocumentText}
-                title="Home"
-                as="div"
-              >
-                Posts
-              </Sidebar.Item>
-            </Link>
+            <>
+              <Link to="/dashboard?tab=posts">
+                <Sidebar.Item
+                  active={tab === "posts"}
+                  icon={HiDocumentText}
+                  as="div"
+                >
+                  Posts
+                </Sidebar.Item>
+              </Link>
+
+              <Link to="/dashboard?tab=users">
+                <Sidebar.Item
+                  active={tab === "users"}
+                  icon={HiOutlineUserGroup}
+                  as="div"
+                >
+                  Users
+                </Sidebar.Item>
+              </Link>
+            </>
           )}
 
-          {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=users">
-              <Sidebar.Item
-                active={tab === "users"} // to determine whether the sidebar item should appear as "active"
-                icon={HiOutlineUserGroup}
-                title="Home"
-                as="div"
-              >
-                Users
-              </Sidebar.Item>
-            </Link>
-          )}
-
-          <>
-            <Link to="/dashboard?tab=comments">
-              <Sidebar.Item
-                active={tab === "comments"} // to determine whether the sidebar item should appear as "active"
-                icon={HiAnnotation}
-                title="Comments"
-                as="div"
-              >
-                Comments
-              </Sidebar.Item>
-            </Link>
-          </>
+          <Link to="/dashboard?tab=comments">
+            <Sidebar.Item
+              active={tab === "comments"}
+              icon={HiAnnotation}
+              as="div"
+            >
+              Comments
+            </Sidebar.Item>
+          </Link>
 
           <Sidebar.Item
             icon={HiArrowSmRight}
-            title="Sign Out"
             className="cursor-pointer"
             onClick={handleSignout}
           >
