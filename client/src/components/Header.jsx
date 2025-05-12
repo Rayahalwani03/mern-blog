@@ -37,12 +37,12 @@ const Header = () => {
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
   return (
     <Navbar className="border-b-2">
       <Link
         to="/"
-        className="self-center whitespace-nowrap text-sm font-semibold dark:text-white sm:text-xl "
+        className="self-center whitespace-nowrap text-sm font-semibold dark:text-white sm:text-xl"
       >
         <span className="px-3 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-md text-white">
           Rays
@@ -50,7 +50,7 @@ const Header = () => {
         Blog
       </Link>
 
-      <form action="">
+      <form action="" >
         <TextInput
           type="text"
           placeholder="Search..."
@@ -95,7 +95,7 @@ const Header = () => {
                 <DropdownItem>Profile</DropdownItem>
               </Link>
               <DropdownDivider />
-              <DropdownItem onClick={handleSignout} >Sign Out</DropdownItem>
+              <DropdownItem onClick={handleSignout}>Sign Out</DropdownItem>
             </DropdownHeader>
           </Dropdown>
         ) : (
@@ -118,6 +118,9 @@ const Header = () => {
         </Navbar.Link>
         <Navbar.Link active={path === "/projects"} as={"div"}>
           <Link to="/projects">Projects</Link>
+        </Navbar.Link>
+        <Navbar.Link active={path === "/posts"} as={"div"}>
+          <Link to="/posts">Posts</Link>
         </Navbar.Link>
       </NavbarCollapse>
     </Navbar>

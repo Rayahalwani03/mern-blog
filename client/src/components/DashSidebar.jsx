@@ -1,6 +1,12 @@
 import { Sidebar } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiUser } from "react-icons/hi";
+import {
+  HiAnnotation,
+  HiArrowSmRight,
+  HiChartPie,
+  HiDocumentText,
+  HiOutlineUserGroup,
+} from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { signoutSuccess } from "../redux/user/useSlice";
@@ -40,18 +46,18 @@ const DashSidebar = () => {
     <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-2">
-          <Link to="/dashboard?tab=profile">
-            <Sidebar.Item
-              active={tab === "profile"}
-              icon={HiUser}
-              title="Home"
-              label={currentUser.isAdmin ? "Admin" : "User"}
-              labelColor="dark"
-              as="div"
-            >
-              Profile
-            </Sidebar.Item>
-          </Link>
+          {currentUser && currentUser.isAdmin && (
+            <Link to="/dashboard?tab=dash">
+              <Sidebar.Item
+                active={tab === "dash" || !tab}
+                icon={HiChartPie}
+                title="Home"
+                as="div"
+              >
+                Dashboard
+              </Sidebar.Item>
+            </Link>
+          )}
 
           {currentUser.isAdmin && (
             <Link to="/dashboard?tab=posts">
@@ -59,31 +65,34 @@ const DashSidebar = () => {
                 active={tab === "posts"} // to determine whether the sidebar item should appear as "active"
                 icon={HiDocumentText}
                 title="Home"
-                as="div">
+                as="div"
+              >
                 Posts
               </Sidebar.Item>
             </Link>
           )}
 
-{currentUser.isAdmin && (
+          {currentUser.isAdmin && (
             <Link to="/dashboard?tab=users">
               <Sidebar.Item
                 active={tab === "users"} // to determine whether the sidebar item should appear as "active"
                 icon={HiOutlineUserGroup}
                 title="Home"
-                as="div">
+                as="div"
+              >
                 Users
               </Sidebar.Item>
             </Link>
           )}
 
           <>
-          <Link to="/dashboard?tab=comments">
+            <Link to="/dashboard?tab=comments">
               <Sidebar.Item
                 active={tab === "comments"} // to determine whether the sidebar item should appear as "active"
-                icon={HiOutlineUserGroup}
+                icon={HiAnnotation}
                 title="Comments"
-                as="div">
+                as="div"
+              >
                 Comments
               </Sidebar.Item>
             </Link>

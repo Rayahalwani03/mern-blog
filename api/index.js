@@ -5,8 +5,8 @@ import userRoute from'./route/user.route.js'; // js is most and the userRoute co
 // js is most and the userRoute cosider it as var and the app will know
 import authRoute from './route/auth.route.js'; // js is most and the userRoute cosider it as var and the app will know
 import cookieParser from 'cookie-parser';
-import postRoutes from './route/post.route.js'
-import commentRoute from './route/comment.route.js'
+import postRoutes from './route/post.route.js';
+import commentRoute from './route/comment.route.js';
 
 
 dotenv.config(); // to use the .env file
@@ -14,10 +14,10 @@ dotenv.config(); // to use the .env file
 mongoose.connect(process.env.MONGO)
 .then(()=> {
     console.log('Connected to MongoDB');
-}) 
+})
 .catch((error) => {
     console.log(error);
-})
+});
 const app = express();
 
 app.use(express.json());// for body requests 
@@ -29,7 +29,7 @@ app.listen(3000, () => {
 }); // عم يشغل السيرفر 
 
 
-    
+
 app.use('/api/user', userRoute); // we are going to use the get request
  // we are going to use the get request
 
