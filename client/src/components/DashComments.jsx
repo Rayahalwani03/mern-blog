@@ -87,7 +87,7 @@ export default function DashComments() {
               <Table.Cell>
                 {new Date(comment.updatedAt).toLocaleDateString()}
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell className="max-w-sm truncate">
                 {comment.content}
               </Table.Cell>
               <Table.Cell>

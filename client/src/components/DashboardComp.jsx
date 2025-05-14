@@ -222,7 +222,7 @@ const DashboardComp = () => {
             {comments && comments.map((comment) => (
               <Table.Body key={comment._id} className="divide-y">
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell className="w-96">
+                  <Table.Cell className="w-96 max-w-sm truncate">
                     <p className="line-clamp-2">
                       {comment.content}
                     </p>

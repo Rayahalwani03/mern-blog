@@ -14,7 +14,7 @@ import Projects from "./pages/Projects";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import UpdatePost from "./pages/UpdatePost";
-
+import Search from "./pages/Search";
 // Wrapper component to handle location-based rendering
 const SocialIconsWrapper = () => {
   const location = useLocation();
@@ -47,6 +47,8 @@ function App() {
           <Route path="/posts" element={<Home />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/search" element={<Search />} />
+
           <Route path="/post/:postSlug" element={<PostPage />} />
         </Routes>
         <FooterCom />
